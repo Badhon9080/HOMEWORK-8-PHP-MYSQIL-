@@ -1,17 +1,5 @@
 <?php
  session_start();
- include "./database/env.php";
- $query="SELECT * FROM posts";
- $res=mysqli_query($conn,$query);
- $posts=mysqli_fetch_all($res,1);
- //var_dump($res);
-//var_dump($query);
-//var_dump($posts);
-//echo "<pre>";
-//print_r(count($posts));
-//var_dump($posts);
-//echo "</pre>";
-//exit();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,51 +39,44 @@
   </div>
 </nav>
 <!--USER FORM SECTION START-->
-<div class="card col-lg-8 mx-auto mt-3">
-    <div class="card-header">all post</div>
+<div class="card col-lg-6 mx-auto mt-3">
+    <div class="card-header">add post</div>
     <div class="card-body">
-         
-     <table class="table">
-            <tr>
-                <th>#</th>
-                <th>AUTHOR</th>
-                <th>TITLE</th>
-                <th>DETAILS</th>
-            </tr>
+        <form action="./contorller/stoRe.php" method="GET">
+              <input value="<?= $_SESSION['data']['title'] ?? ''  ?>"  name="title" type="text" placeholder="post title" class="form-control"> 
+              <?php 
+                  if(isset($_SESSION['errors']["title_error"])){
 
-            <?php
-            if(count($posts)>0){
-            foreach($posts as $key=>$post){
-            ?>    
-              <!--  <tr>
-                <td><//?= ++$key ?></td>
-                <td><//?= $post['author'] ?></td>
-                <td><//?= $post['title'] ?></td>
-                <td><//?= $post['details'] ?></td>
-               </tr>-->
-               <tr>
-                <td><?= ++$key ?></td>
-                <td>
-                     <img style="width: 40px; height:40px; border-radius: 50%;object-fit:cover;" src="https://api.dicebear.com/7.x/initials/svg?seed=<?= $post['author'] ?>" alt=""> <?= $post['author'] ?>       
-            </td>
-                <td><?= $post['title'] ?></td>
-                <td><?= strlen($post['details']) > 15 ? substr($post['details'],0,15). "..." : $post['details']  ?></td>
-               </tr>
-            <?php   
-            }
-        }else{
+                  ?>  
+                    <span class="text-danger">
+                        <?= $_SESSION['errors']["title_error"]; ?>
+               </span>
+               <?php
+                  }
+                  ?>
+             <textarea  name="details" class="form-control my-3" placeholder="post-details"><?= $_SESSION['data']['details'] ?? ''  ?></textarea>
+              <?php 
+                  if(isset($_SESSION['errors']["detail_error"])){
 
-       
-            ?>
-            
-            <tr>
-                <td colspan="5" class="text-center"><h5>no post found😔</h5></td>
-            </tr>
-          <?php
-          }
-          ?>
-     </table>
-
+                  ?>  
+                    <span class="text-danger">
+                        <?= $_SESSION['errors']["detail_error"]; ?>
+               </span>
+               <?php
+                  }
+                  ?>
+                  <?php
+               
+               //  echo $_SESSION['errors']["detail_error"];
+               ?> 
+               
+              
+              <input value="<?= $_SESSION['data']['author'] ?? ''  ?>" name="author" type="text" placeholder="post author" class="form-control"> 
+              <button type="submit" class="btn btn-primary mt-5">submit</button></br>
+              <span class="text-success">
+              <?= isset($_SESSION['msg']) ? $_SESSION['msg']  : '' ?>
+              </span>
+        </form>
     </div>
 </div>
 <!--//USER FORM SECTION END-->
